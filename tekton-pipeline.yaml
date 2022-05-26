@@ -1,0 +1,74 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: run-debug
+spec:
+  workspaces:
+  - name: output
+    optional: true
+  steps:
+  - image: alpine:latest
+    workingDir: "/workspace/output/"
+    script: |
+      ls -lrt      
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: toolkit
+spec:
+  workspaces:
+  - name: shared-data
+    description: |
+      This workspace will receive the cloned git repo and be passed
+      to the next Task for the repo's README.md file to be read.
+  tasks:
+  - name: fetch-repo
+    taskRef:
+      name: git-clone
+    params:
+    - name: url
+      value: "http://harish:N1xaCktdEQpZSVd_KTzv@gitlab.squareyards.com:8180/dotcom/zelarsoft-code-api.git"
+    - name: revision
+      value: "imran"   
+    workspaces:
+    - name: output
+      workspace: shared-data
+  - name: debug-folder
+    runAfter: ["fetch-repo"]
+    taskRef:
+      name: run-debug 
+    workspaces:
+    - name: output
+      workspace: shared-data      
+  - name: build-container-image
+    runAfter: ["debug-folder"]
+    taskRef:
+      name: build-kaniko-git
+    params:
+    - name: app_repo
+      value: dir:///workspace/output/
+    - name: container_image
+      value: asia-south1-docker.pkg.dev/zelarsoft-350108/sqyards/api-image 
+    - name: container_tag
+      value: "v2"
+    workspaces:
+    - name: output
+      workspace: shared-data 
+            
+  # - name: deploy-to-cluster
+  #   taskRef:
+  #     name: deploy-using-kubectl
+  #   runAfter:
+  #     - toolkit
+  #   params:
+  #     - name: pathToYamlFile
+  #       value:  "$(params.pathToYamlFile)"
+  #     - name: imageUrl
+  #       value: "$(params.imageUrl)"
+  #     - name: imageTag
+  #       value: "$(params.imageTag)"
+  #   resources:
+  #     inputs:
+  #       - name: git-source
+  #         resource: git-source
