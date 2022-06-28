@@ -32,7 +32,7 @@ spec:
       name: git-clone
     params:
     - name: url
-      value: "http://gitlab.squareyards.com:8180/dotcom/zelarsoft-code-api.git"
+      value: "<repo-url>"
     - name: revision
       value: $(params.gitrevision-tag)    
     workspaces:
@@ -53,7 +53,7 @@ spec:
     - name: app_repo
       value: dir:///workspace/output/
     - name: container_image
-      value: asia-south1-docker.pkg.dev/zelarsoft-350108/sqyards/api-image 
+      value: <image-name> 
     - name: container_tag
       value: $(params.gitrevision-tag)
     workspaces:
