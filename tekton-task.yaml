@@ -13,7 +13,7 @@ spec:
   volumes:
   - name: kaniko-secret
     secret:
-      secretName: regcred
+      secretName: docker-push
       items:
       - key: .dockerconfigjson
         path: config.json
@@ -24,7 +24,7 @@ spec:
     command: [/kaniko/executor]
     args:
     - --context=./
-    - --destination=$(params.container_image):$(params.container_tag)
+    - --destination=$(params.container_image):$(params.container_tag)    #$(params.container_tag)
     - --force
     volumeMounts:
     - name: kaniko-secret
