@@ -1,12 +1,13 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: git-clone-checking-out-a-branch
+  generateName: git-clone-checking-out-a-branch-
 spec:
+  serviceAccountName: build-robot
   pipelineRef:
-    name: toolkit
-  workspaces:
-  - name: shared-data
+    name: sqr-yard-be
+  workspaces:  
+  - name: shared-data 
     volumeClaimTemplate:
       spec:
         accessModes:
