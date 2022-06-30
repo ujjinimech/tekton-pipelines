@@ -32,7 +32,11 @@ spec:
       name: git-clone
     params:
     - name: url
+<<<<<<< HEAD:be-pipeline.yaml
       value: "http://gitlab.squareyards.com:8180/dotcom/zelarsoft-code-api.git"
+=======
+      value: "<repo-url>"
+>>>>>>> 83681fe8c4f0555503d080a6a69588e41678426c:tekton-pipeline.yaml
     - name: revision
       value: $(params.gitrevision-tag)    
     workspaces:
@@ -53,9 +57,13 @@ spec:
     - name: app_repo
       value: dir:///workspace/output/
     - name: container_image
-      value: asia-south1-docker.pkg.dev/zelarsoft-350108/sqyards/api-image 
+      value: <image-name> 
     - name: container_tag
       value: $(params.gitrevision-tag)
     workspaces:
     - name: output
+<<<<<<< HEAD:be-pipeline.yaml
       workspace: shared-data
+=======
+      workspace: shared-data
+>>>>>>> 83681fe8c4f0555503d080a6a69588e41678426c:tekton-pipeline.yaml

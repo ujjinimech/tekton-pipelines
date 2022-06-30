@@ -1,6 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
+<<<<<<< HEAD:fe-run.yaml
   name: git-clone-checking-fe
 spec:
   serviceAccountName: build-robot
@@ -8,6 +9,15 @@ spec:
     name: sqr-yard-fe
   workspaces:
   - name: shared-data-fe
+=======
+  generateName: git-clone-checking-out-a-branch-
+spec:
+  serviceAccountName: build-robot
+  pipelineRef:
+    name: sqr-yard-be
+  workspaces:  
+  - name: shared-data 
+>>>>>>> 83681fe8c4f0555503d080a6a69588e41678426c:prun.yaml
     volumeClaimTemplate:
       spec:
         accessModes:
