@@ -6,6 +6,8 @@ spec:
   workspaces:
   - name: output
     optional: true
+  # taskRef:
+  #    name: fetch-repo-fe  
   params:
   - name: app_repo
   - name: container_image
@@ -13,7 +15,7 @@ spec:
   volumes:
   - name: kaniko-secret
     secret:
-      secretName: regcred
+      secretName: docker-push
       items:
       - key: .dockerconfigjson
         path: config.json
@@ -29,4 +31,3 @@ spec:
     volumeMounts:
     - name: kaniko-secret
       mountPath: /kaniko/.docker/
-

@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: git-clone-checking-out-a-branch-
+spec:
+  serviceAccountName: build-robot
+  pipelineRef:
+    name: sqr-yard-be
+  workspaces:  
+  - name: shared-data 
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

@@ -1,0 +1,86 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-secret-fe
+type: Opaque
+stringData:
+  secretToken: "1234567890"
+
+# ---
+# apiVersion: triggers.tekton.dev/v1beta1
+# kind: EventListener
+# metadata:
+#   name: gitlab-event-listener-fe
+#   # annotations:
+#   #   service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
+# spec:
+#   serviceAccountName: build-robot
+#   triggers:
+#     - triggerRef: gitlab-listener-trigger-fe
+#   resources:
+#     kubernetesResource:
+#        serviceType: NodePort
+      # serviceType: LoadBalancer
+      # servicePort: 8128
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: gitlab-listener-trigger-fe
+spec:
+  interceptors:
+    - name: "verify-gitlab-payload"
+      ref:
+        name: "gitlab"
+        kind: ClusterInterceptor
+      params:
+        - name: secretRef
+          value:
+            secretName: "gitlab-secret-fe"
+            secretKey: "secretToken"
+        - name: eventTypes
+          value:
+            - "Push Hook"
+  bindings:
+    - ref: binding-fe
+  template:
+    ref: template-fe
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: binding-fe
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.checkout_sha)
+    - name: gitrepositoryurl
+      value: $(body.repository.git_http_url)
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: template-fe
+spec:
+  resourcetemplates:
+          - apiVersion: tekton.dev/v1beta1
+            kind: PipelineRun
+            metadata:
+              generateName: sqr-yard-fe-pipeline-run-
+            spec:
+              serviceAccountName: build-robot
+              pipelineRef:
+                name: sqr-yard-fe
+              workspaces:
+              - name: shared-data-fe
+                volumeClaimTemplate:
+                  spec:
+                    accessModes:
+                      - ReadWriteOnce
+                    resources:
+                      requests:
+                        storage: 1Gi

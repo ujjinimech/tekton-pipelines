@@ -10,13 +10,17 @@ spec:
   - image: alpine:latest
     workingDir: "/workspace/output/"
     script: |
-      ls -lrt      
+      ls -lrt  
+
+       
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: toolkit
+  name: sqr-yard-be
 spec:
+  params:
+    - name: gitrevision-tag
   workspaces:
   - name: shared-data
     description: |
@@ -28,19 +32,19 @@ spec:
       name: git-clone
     params:
     - name: url
-      value: "http://harish:N1xaCktdEQpZSVd_KTzv@gitlab.squareyards.com:8180/dotcom/zelarsoft-code-api.git"
+      value: "http://gitlab.squareyards.com:8180/dotcom/zelarsoft-code-api.git"
     - name: revision
-      value: "imran"   
+      value: $(params.gitrevision-tag)    
     workspaces:
     - name: output
-      workspace: shared-data
+      workspace: shared-data     
   - name: debug-folder
     runAfter: ["fetch-repo"]
     taskRef:
       name: run-debug 
     workspaces:
     - name: output
-      workspace: shared-data      
+      workspace: shared-data         
   - name: build-container-image
     runAfter: ["debug-folder"]
     taskRef:
@@ -51,24 +55,7 @@ spec:
     - name: container_image
       value: asia-south1-docker.pkg.dev/zelarsoft-350108/sqyards/api-image 
     - name: container_tag
-      value: "v2"
+      value: $(params.gitrevision-tag)
     workspaces:
     - name: output
-      workspace: shared-data 
-            
-  # - name: deploy-to-cluster
-  #   taskRef:
-  #     name: deploy-using-kubectl
-  #   runAfter:
-  #     - toolkit
-  #   params:
-  #     - name: pathToYamlFile
-  #       value:  "$(params.pathToYamlFile)"
-  #     - name: imageUrl
-  #       value: "$(params.imageUrl)"
-  #     - name: imageTag
-  #       value: "$(params.imageTag)"
-  #   resources:
-  #     inputs:
-  #       - name: git-source
-  #         resource: git-source
+      workspace: shared-data

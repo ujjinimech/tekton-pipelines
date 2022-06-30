@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-secret
+type: Opaque
+stringData:
+  secretToken: "1234567"
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: gitlab-event-listener
+spec:
+  serviceAccountName: build-robot
+  triggers:
+    - triggerRef: gitlab-listener-trigger
+    - triggerRef: gitlab-listener-trigger-fe
+  resources:
+    kubernetesResource:
+      serviceType: NodePort
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: gitlab-listener-trigger
+spec:
+  interceptors:
+    - name: "verify-gitlab-payload-be"
+      ref:
+        name: "gitlab"
+        kind: ClusterInterceptor
+      params:
+        - name: secretRef
+          value:
+            secretName: "gitlab-secret"
+            secretKey: "secretToken"
+        - name: eventTypes
+          value:
+            - "Push Hook"
+  bindings:
+    - ref: binding
+  template:
+    ref: template
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: binding
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.checkout_sha)
+    - name: gitrepositoryurl
+      value: $(body.repository.git_http_url)
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: template
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+         generateName: git-clone-checking-out-a-branch-
+      spec:
+        serviceAccountName: build-robot
+        pipelineRef:
+          name: sqr-yard-be
+        workspaces:  
+        - name: shared-data 
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi

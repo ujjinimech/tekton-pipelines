@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-kaniko-git
+spec:
+  workspaces:
+  - name: output
+    optional: true
+  params:
+  - name: app_repo
+  - name: container_image
+  - name: container_tag
+  volumes:
+  - name: kaniko-secret
+    secret:
+      secretName: docker-push
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+  steps:
+  - name: build
+    image: gcr.io/kaniko-project/executor:debug
+    workingDir: "/workspace/output/"
+    command: [/kaniko/executor]
+    args:
+    - --context=./
+    - --destination=$(params.container_image):$(params.container_tag)    #$(params.container_tag)
+    - --force
+    volumeMounts:
+    - name: kaniko-secret
+      mountPath: /kaniko/.docker/
+

@@ -1,5 +1,7 @@
-kubectl apply -f tekton-task.yaml -f tekton-pipeline.yaml -n tekton-pipelines
+kubectl delete -f be-task.yaml -f be-pipeline.yaml -n tekton-pipelines
 sleep 0.5
-kubectl delete -f prun.yaml -n tekton-pipelines
+kubectl apply -f fe-task.yaml -f be-pipeline.yaml -n tekton-pipelines
 sleep 0.5
-kubectl apply -f prun.yaml -n tekton-pipelines
+kubectl delete -f be-run.yaml -n tekton-pipelines
+sleep 0.5
+kubectl create -f be-run.yaml -n tekton-pipelines
