@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: test-deployment
+spec:
+  inputs:
+    params:
+      - name: DEPLOY_ENVIRONMENT
+        description: The environment where you deploy the app
+        default: 'env-dev'
+        type: string
+  steps:
+    - name: test-image
+      image: lachlanevenson/k8s-kubectl
+      command: ["kubectl"]
+      args:
+        - "get"
+        - "all"
+        - "-n"
+        - "$(inputs.params.DEPLOY_ENVIRONMENT)"

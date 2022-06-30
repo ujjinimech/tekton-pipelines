@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: promoting
+spec:
+  serviceAccountName: build-robot
+  pipelineRef:
+    name: promoting-pipeline
+  params:
+  - name: charts_dir
+    value: /workspace/output/sqyards
+  - name: release_version
+    value: v0.1.0
+  - name: release_name
+    value: sqyards
+  workspaces:
+  - name: shared-data
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi

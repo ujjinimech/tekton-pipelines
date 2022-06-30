@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: promote-task
+spec:
+  params:
+   - name: PROMOTE_ENVIRONMENT
+     description: The environment where you deploy the app
+     default: 'env-qa'
+     type: string
+   - name: charts_dir
+     description: The directory in source that contains the helm chart
+     default: "/workspace/output/sqyards"
+   - name: release_version
+     description: The helm release version in semantic versioning format
+     default: "v0.1.0"
+   - name: release_name
+     description: The helm release name
+     default: "sqyards"
+   - name: values_file
+     description: "The values file to be used"
+     default: "qa-values.yaml"
+  workspaces:
+    - name: output
+  steps:
+    - name: deploy-resources
+      image: lachlanevenson/k8s-helm
+      workingDir: /workspace/output
+      script: |
+        echo current installed helm releases
+        helm list --namespace "$(params.PROMOTE_ENVIRONMENT)"
+        helm list -A
+
+        echo installing helm chart...
+        helm upgrade --install --wait --values "$(params.charts_dir)/$(params.values_file)" --namespace "$(params.PROMOTE_ENVIRONMENT)" --version "$(params.release_version)" "$(params.release_name)" "$(params.charts_dir)" --debug

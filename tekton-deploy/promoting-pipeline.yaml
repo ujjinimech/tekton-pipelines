@@ -1,0 +1,118 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: run-debug
+spec:
+  workspaces:
+  - name: output
+    optional: true
+  steps:
+  - image: alpine:latest
+    workingDir: "/workspace/output/"
+    script: |
+      ls -lrt      
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: promoting-pipeline
+spec:
+  workspaces:
+  - name: shared-data
+    description: |
+      This workspace will receive the cloned git repo and be passed
+      to the next Task for the repo's README.md file to be read.
+  tasks:
+  - name: fetch-repo
+    taskRef:
+      name: git-clone
+    params:
+    - name: url
+      value: "https://NithyaParavasthu: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@github.com/zelarhq/sqyards-devops.git"
+    - name: revision
+      value: "main"   
+    workspaces:
+    - name: output
+      workspace: shared-data
+  - name: debug-folder
+    runAfter: ["fetch-repo"]
+    taskRef:
+      name: run-debug 
+    workspaces:
+    - name: output
+      workspace: shared-data 
+  - name: deploy-to-dev
+    runAfter: ["debug-folder"]
+    taskRef:
+      name: promote-task
+    params:
+    - name: PROMOTE_ENVIRONMENT
+      value: env-dev
+    - name: charts_dir
+      value: /workspace/output/sqyards
+    - name: release_version
+      value: v0.1.0
+    - name: release_name
+      value: sqyards
+    - name: values_file
+      value: dev-values.yaml
+    workspaces:
+    - name: output
+      workspace: shared-data 
+  - name: test-dev
+    runAfter: ["deploy-to-dev"]
+    taskRef:
+      name: test-deployment
+    params:
+    - name: DEPLOY_ENVIRONMENT
+      value: env-dev     
+  - name: deploy-to-qa
+    runAfter: ["test-dev"]
+    taskRef:
+      name: promote-task
+    params:
+    - name: PROMOTE_ENVIRONMENT
+      value: env-qa
+    - name: charts_dir
+      value: /workspace/output/sqyards
+    - name: release_version
+      value: v0.1.0
+    - name: release_name
+      value: sqyards
+    - name: values_file
+      value: qa-values.yaml
+    workspaces:
+    - name: output
+      workspace: shared-data 
+  - name: test-qa
+    runAfter: ["deploy-to-qa"]
+    taskRef:
+      name: test-deployment
+    params:
+    - name: DEPLOY_ENVIRONMENT
+      value: env-qa
+  - name: deploy-to-prod
+    runAfter: ["test-qa"]
+    taskRef:
+      name: promote-task
+    params:
+    - name: PROMOTE_ENVIRONMENT
+      value: env-prod
+    - name: charts_dir
+      value: /workspace/output/sqyards
+    - name: release_version
+      value: v0.1.0
+    - name: release_name
+      value: sqyards
+    - name: values_file
+      value: pro-values.yaml
+    workspaces:
+    - name: output
+      workspace: shared-data 
+  - name: test-prod
+    runAfter: ["deploy-to-prod"]
+    taskRef:
+      name: test-deployment
+    params:
+    - name: DEPLOY_ENVIRONMENT
+      value: env-prod
