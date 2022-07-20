@@ -59,7 +59,3 @@ spec:
     workspaces:
     - name: output
       workspace: shared-data
-<<<<<<< HEAD
-
-=======
->>>>>>> 3ee9dee04840f93ef8e16cc284bae9ff69dac49a
