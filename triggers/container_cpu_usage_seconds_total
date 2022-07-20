@@ -1,0 +1,4 @@
+container_cpu_usage_seconds_total
+machine_cpu_cores
+
+sum (rate (container_cpu_usage_seconds_total{id="/",kubernetes_io_hostname=~"^$Node$"}[$interval]))

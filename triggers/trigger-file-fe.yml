@@ -21,8 +21,8 @@ stringData:
 #   resources:
 #     kubernetesResource:
 #        serviceType: NodePort
-      # serviceType: LoadBalancer
-      # servicePort: 8128
+#       serviceType: LoadBalancer
+#       servicePort: 8128
 
 ---
 apiVersion: triggers.tekton.dev/v1beta1
