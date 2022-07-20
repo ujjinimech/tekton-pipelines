@@ -7,7 +7,11 @@ spec:
   pipelineRef:
     name: sqr-yard-fe
   workspaces:  
+<<<<<<< HEAD:pipelines/fe-run.yaml
   - name: shared-data-fe 
+=======
+  - name: shared-data 
+>>>>>>> 908350ab374327adfbc5aca183821f9ea17c5d32:fe-run.yaml
     volumeClaimTemplate:
       spec:
         accessModes:

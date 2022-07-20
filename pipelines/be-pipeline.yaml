@@ -59,3 +59,7 @@ spec:
     workspaces:
     - name: output
       workspace: shared-data
+<<<<<<< HEAD:pipelines/be-pipeline.yaml
+=======
+
+>>>>>>> 908350ab374327adfbc5aca183821f9ea17c5d32:be-pipeline.yaml
