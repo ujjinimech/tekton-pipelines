@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceAccountName: build-robot
   pipelineRef:
-    name: sqr-yard-fe
+    name: fe
   workspaces:  
   - name: shared-data-fe 
     volumeClaimTemplate:

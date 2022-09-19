@@ -28,7 +28,7 @@ spec:
       name: git-clone
     params:
     - name: url
-      value: "https://NithyaParavasthu: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@github.com/zelarhq/sqyards-devops.git"
+      value: "repo-url"
     - name: revision
       value: "main"   
     workspaces:
@@ -49,11 +49,11 @@ spec:
     - name: PROMOTE_ENVIRONMENT
       value: env-dev
     - name: charts_dir
-      value: /workspace/output/sqyards
+      value: /workspace/output/ujji
     - name: release_version
       value: v0.1.0
     - name: release_name
-      value: sqyards
+      value: ujji
     - name: values_file
       value: dev-values.yaml
     workspaces:
@@ -74,11 +74,11 @@ spec:
     - name: PROMOTE_ENVIRONMENT
       value: env-qa
     - name: charts_dir
-      value: /workspace/output/sqyards
+      value: /workspace/output/ujji
     - name: release_version
       value: v0.1.0
     - name: release_name
-      value: sqyards
+      value: ujji
     - name: values_file
       value: qa-values.yaml
     workspaces:
@@ -99,11 +99,11 @@ spec:
     - name: PROMOTE_ENVIRONMENT
       value: env-prod
     - name: charts_dir
-      value: /workspace/output/sqyards
+      value: /workspace/output/ujji
     - name: release_version
       value: v0.1.0
     - name: release_name
-      value: sqyards
+      value: ujji
     - name: values_file
       value: pro-values.yaml
     workspaces:

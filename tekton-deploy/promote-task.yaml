@@ -10,13 +10,13 @@ spec:
      type: string
    - name: charts_dir
      description: The directory in source that contains the helm chart
-     default: "/workspace/output/sqyards"
+     default: "/workspace/output/ujji"
    - name: release_version
      description: The helm release version in semantic versioning format
      default: "v0.1.0"
    - name: release_name
      description: The helm release name
-     default: "sqyards"
+     default: "ujji"
    - name: values_file
      description: "The values file to be used"
      default: "qa-values.yaml"

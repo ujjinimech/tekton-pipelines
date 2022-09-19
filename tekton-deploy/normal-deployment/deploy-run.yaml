@@ -1,18 +1,18 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: sqrd-deploy
+  name: deploy-run
 spec:
   serviceAccountName: build-robot
   pipelineRef:
-    name: sqrd-deploy-pipeline
+    name: deploy-pipeline
   params:
   - name: charts_dir
-    value: /workspace/output/sqyards
+    value: /workspace/output/ujji
   - name: release_version
     value: v0.1.0
   - name: release_name
-    value: sqyards
+    value: ujji
   workspaces:
   - name: shared-data
     volumeClaimTemplate:

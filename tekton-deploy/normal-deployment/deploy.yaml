@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: sqrd-deploy-task
+  name: deploy-task
   labels:
     app.kubernetes.io/version: "0.3"
   annotations:
@@ -18,7 +18,7 @@ spec:
       default: "v0.1.0"
     - name: release_name
       description: The helm release name
-      default: "sqyards"
+      default: "ujji"
     - name: release_namespace
       description: The helm release namespace
       default: "default"

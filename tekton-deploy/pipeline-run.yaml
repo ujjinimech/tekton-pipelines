@@ -8,11 +8,11 @@ spec:
     name: promoting-pipeline
   params:
   - name: charts_dir
-    value: /workspace/output/sqyards
+    value: /workspace/output/ujji
   - name: release_version
     value: v0.1.0
   - name: release_name
-    value: sqyards
+    value: ujji
   workspaces:
   - name: shared-data
     volumeClaimTemplate:

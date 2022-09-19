@@ -15,7 +15,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: sqr-yard-fe
+  name: fe
   # annotations:
   #   tekton.dev/pipelines.minVersion: '0.12.1'
   #   tekton.dev/tags: build, push, deploy
@@ -34,7 +34,7 @@ spec:
       name: git-clone
     params:
     - name: url
-      value: "http://gitlab.squareyards.com:8180/dotcom/zelarsoft-code.git"
+      value: "<hub-repo>"
     - name: revision
       value: $(params.gitrevision-tag) 
     workspaces:
@@ -55,7 +55,7 @@ spec:
     - name: app_repo
       value: dir:///workspace/output/
     - name: container_image
-      value: asia-south1-docker.pkg.dev/zelarsoft-350108/sqyards/front-end-image
+      value: <image-tag>
     - name: container_tag
       value: $(params.gitrevision-tag)
     workspaces:

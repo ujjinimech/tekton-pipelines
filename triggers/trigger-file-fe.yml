@@ -79,11 +79,11 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: sqr-yard-fe-pipeline-run-
+        generateName: yard-fe-pipeline-run-
       spec:
         serviceAccountName: build-robot
         pipelineRef:
-          name: sqr-yard-fe
+          name: yard-fe
         params: 
         - name: gitrevision-tag
           value: $(tt.params.gitrevision-tag)       

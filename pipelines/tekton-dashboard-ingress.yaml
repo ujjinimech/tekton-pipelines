@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: tekton-dashboard.34.80.150.150.nip.io
+  - host: tekton-dashboard.nip.io
     http:
       paths:
         - path: /

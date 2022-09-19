@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceAccountName: build-robot
   pipelineRef:
-    name: sqr-yard-be
+    name: ujji
   workspaces:  
   - name: shared-data 
     volumeClaimTemplate:

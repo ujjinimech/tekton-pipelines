@@ -15,7 +15,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: sqrd-deploy-pipeline
+  name: deploy-pipeline
 spec:
   workspaces:
   - name: shared-data
@@ -28,7 +28,7 @@ spec:
       name: git-clone
     params:
     - name: url
-      value: "https://NithyaParavasthu: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@github.com/zelarhq/sqyards-devops.git"
+      value: "<repo-url>"
     - name: revision
       value: "main"   
     workspaces:
@@ -44,14 +44,14 @@ spec:
   - name: deploy-to-gke
     runAfter: ["debug-folder"]
     taskRef:
-      name: sqrd-deploy-task
+      name: deploy-task
     params:
     - name: charts_dir
-      value: /workspace/output/sqyards
+      value: /workspace/output/ujji
     - name: release_version
       value: v0.1.0
     - name: release_name
-      value: sqyards
+      value: ujji
     - name: release_namespace
       value: default
     - name: values_file
