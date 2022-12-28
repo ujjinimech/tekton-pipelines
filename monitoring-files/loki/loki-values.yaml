@@ -1,0 +1,32 @@
+loki:
+  enabled: true
+promtail:
+  enabled: true
+fluent-bit:
+  enabled: false
+grafana:
+  enabled: false
+  sidecar:
+    datasources:
+      enabled: true
+  image:
+    tag: latest
+
+config:
+  schema_config:
+    configs:
+    - from: 2020-05-15
+      # store: bigtable
+      object_store: gcs
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 6h
+  storage_config:
+    # bigtable:
+    #     instance: <instance_name>
+    #     project: <project_name>
+    gcs:
+        bucket_name: loki-cluster-vm-logs
+        service_account: 
+           

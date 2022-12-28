@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: thanos-receive
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: thanos-receive.<ip>nip.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: thanos-receive
+            port:
+              number: 10901
+        path: /
+        pathType: Prefix

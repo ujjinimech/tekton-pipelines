@@ -1,0 +1,12 @@
+objstoreConfig: |-
+  type: GCS
+  config:
+    bucket: "thanos-sqd"
+    service_account: |-
+
+    
+receive:
+  enabled: true
+  ingress:
+    enabled: true
+    hostname: thanos-receive.<ip>.nip.io
